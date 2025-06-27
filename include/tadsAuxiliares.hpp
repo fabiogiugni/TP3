@@ -2,6 +2,19 @@
 #define TADSAUXILIARES_HPP
 
 #include <iostream>
+#include <string>
+#include <exception>
+
+struct Evento{
+    int tempo;
+    std::string tipoEvento;
+    int idPacote;
+    std::string remetente;
+    std::string destinatario;
+    int armOrigem;
+    int armDestino;
+    int secaoDestino;
+};
 
 struct No{
     int item;
@@ -23,42 +36,8 @@ class ListaEncadeada{
         No *primeiro;
         No *ultimo;
         int tamanho;
-    friend class ListaAdjacencia;
-    friend class Grafo;
-    friend class Armazem;
+    friend class Cliente;
     friend class Pacote;
-};
-
-class PilhaEncadeada {
-public:
-    PilhaEncadeada();  // Construtor
-    ~PilhaEncadeada();  // Destruidor
-
-    void Empilha(int item);  // Empilha um item
-    int Desempilha();  // Desempilha e retorna um item
-    bool Vazio() const;  // Verifica se a pilha está vazia
-    void Limpa();  // Limpa a pilha
-    bool removePorId(int id);  // Remove um item da pilha pelo ID
-    int Tamanho() const;  // Retorna o tamanho da pilha
-    void imprime() const;  // Imprime todos os itens da pilha
-
-private:
-    No* topo;  // Ponteiro para o topo da pilha
-    int tamanho;  // Tamanho da pilha
-};
-
-class Fila {
-public:
-    Fila();
-    ~Fila();
-
-    void Enfileira(int valor);
-    int Desenfileira();
-    bool vazia() const;
-
-private:
-    No* primeiro;
-    No* ultimo;
 };
 
 #endif
