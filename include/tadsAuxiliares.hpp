@@ -7,7 +7,8 @@
 
 struct Evento{
     int tempo;
-    std::string tipoEvento;
+    std::string eventoOuConsulta;
+    std::string tipoEvento;     //Em consulta de Clientes, esse é o nome do cliente.
     int idPacote;
     std::string remetente;
     std::string destinatario;

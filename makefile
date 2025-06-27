@@ -2,15 +2,11 @@ CC = g++
 CFLAGS = -Wall -I include
 SRC_DIR = src/
 BIN_DIR = bin/
-EXECUTABLE = $(BIN_DIR)tp2.out
+EXECUTABLE = $(BIN_DIR)tp3.out
 SOURCE_FILES = $(SRC_DIR)main.cpp \
                $(SRC_DIR)tadsAuxiliares.cpp \
-               $(SRC_DIR)listaAdjacencia.cpp \
-               $(SRC_DIR)graph.cpp \
+               $(SRC_DIR)cliente.cpp \
                $(SRC_DIR)pacote.cpp \
-               $(SRC_DIR)armazem.cpp \
-               $(SRC_DIR)heap.cpp \
-               $(SRC_DIR)escalonador.cpp \
 
 all: 
 	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(SOURCE_FILES)

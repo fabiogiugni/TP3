@@ -3,7 +3,7 @@
 
 #include "tadsAuxiliares.hpp"
 
-class Cliente {
+class Cliente { 
     public:
         Cliente();
         Cliente(const Cliente& outro);
