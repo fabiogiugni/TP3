@@ -3,6 +3,7 @@
 #include "cliente.hpp"
 #include <fstream>
 
+/*
 void imprimirEvento(const Evento& evento) {
     std::cout << "\n--- Registro ---\n";
     std::cout << "Tempo: " << evento.tempo << "\n";
@@ -42,7 +43,7 @@ void imprimirEvento(const Evento& evento) {
         std::cout << "Tipo de registro desconhecido\n";
     }
     std::cout << "-----------------------\n";
-}
+}*/
 
 int main(int argc,char *argv[]){
 
