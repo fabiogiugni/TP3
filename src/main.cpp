@@ -1,6 +1,7 @@
 #include "tadsAuxiliares.hpp"
 #include "pacote.hpp"
 #include "cliente.hpp"
+#include "avlPacotes.hpp"
 #include <fstream>
 
 /*
@@ -72,6 +73,7 @@ int main(int argc,char *argv[]){
 
     Evento *eventos = nullptr;
     eventos = new Evento[numeroLinhas];
+    AVLPacotes pacotes(eventos,numeroLinhas);
 
     for(int i = 0; i < numeroLinhas; i++){
         int tempo = 0;
@@ -175,7 +177,7 @@ int main(int argc,char *argv[]){
             pacotes.consultaPacote(eventos[i].idPacote);    //tipoEvento armazena nome do cliente
         }
         else if(eventos[i].eventoOuConsulta == "EV"){
-            pacotes.insereEvento(eventos[i]);
+            pacotes.insereEvento(eventos[i],i);
             clientes.insereEvento(eventos[i]);
         }
     }

@@ -2,6 +2,7 @@
 #define AVLPACOTES_HPP
 
 #include "pacote.hpp"
+#include "tadsAuxiliares.hpp"
 
 class AVLPacotes {
 private:
@@ -15,6 +16,8 @@ private:
     };
 
     Node* root;
+    Evento* eventos;
+    int numEventos;
 
     // Funções auxiliares
     int height(Node* node);
@@ -32,10 +35,11 @@ private:
 
 public:
     AVLPacotes();
+    AVLPacotes(Evento* eventos, int numEventos);
     ~AVLPacotes();
     
     // Operações públicas
-    void inserir(const Pacote& pacote);
+    void insereEvento(const Evento& evento, int index);
     void remover(const Pacote& pacote);
     bool contem(const Pacote& pacote) const;
     bool estaVazia() const;
