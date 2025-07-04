@@ -20,6 +20,13 @@ struct Pacote {
     ~Pacote(){ delete rota; }
     
     // Operadores de comparação
+    Pacote& operator=(const Pacote& outro) {
+        if (this == &outro) return *this; // proteção contra autoatribuição
+        id = outro.id;
+        delete rota; // libera a rota atual, se houver
+        rota = outro.rota ? new ListaEncadeada(*outro.rota) : nullptr;
+        return *this;
+    }
     bool operator==(const Pacote& outro) const { return id == outro.id; }
     bool operator!=(const Pacote& outro) const { return !(*this == outro); }
     bool operator<(const Pacote& outro) const { return id < outro.id; }

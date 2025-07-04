@@ -87,20 +87,34 @@ AVLPacotes::Node* AVLPacotes::balance(Node* node) {
     return node;
 }
 
-// Inserção auxiliar
-AVLPacotes::Node* AVLPacotes::insert(Node* node, const Pacote& pacote) {
-    if (!node)
-        return new Node(pacote);
+AVLPacotes::Node* AVLPacotes::insert(Node* node, int idPacote, int index) {
+    if (node == nullptr) {
+        // Criar novo nó com o pacote e a rota contendo esse índice
+        Pacote novoPacote(idPacote);
+        novoPacote.rota = new ListaEncadeada();
+        novoPacote.rota->insereFinal(index);
+        return new Node(novoPacote);
+    }
 
-    if (pacote < node->pacote)
-        node->left = insert(node->left, pacote);
-    else if (pacote > node->pacote)
-        node->right = insert(node->right, pacote);
-    else
-        return node; // não insere duplicado
+    if (idPacote < node->pacote.id) {
+        node->left = insert(node->left, idPacote, index);
+    } 
+    else if (idPacote > node->pacote.id) {
+        node->right = insert(node->right, idPacote, index);
+    } 
+    else {
+        // Se já existe, só adiciona o índice na lista
+        if (!node->pacote.rota) {
+            node->pacote.rota = new ListaEncadeada();
+        }
+        node->pacote.rota->insereFinal(index);
+        return node;
+    }
 
     return balance(node);
 }
+
+
 
 // Remoção auxiliar
 AVLPacotes::Node* AVLPacotes::remove(Node* node, const Pacote& pacote) {
@@ -128,6 +142,16 @@ AVLPacotes::Node* AVLPacotes::remove(Node* node, const Pacote& pacote) {
     return balance(node);
 }
 
+AVLPacotes::Node* AVLPacotes::findNode(Node* node, int idPacote) const {
+    if (!node) return nullptr;
+    if (idPacote < node->pacote.id)
+        return findNode(node->left, idPacote);
+    else if (idPacote > node->pacote.id)
+        return findNode(node->right, idPacote);
+    else
+        return node;
+}
+
 // Encontra o nó com valor mínimo
 AVLPacotes::Node* AVLPacotes::minValueNode(Node* node) {
     Node* current = node;
@@ -137,12 +161,12 @@ AVLPacotes::Node* AVLPacotes::minValueNode(Node* node) {
 }
 
 // Busca auxiliar
-bool AVLPacotes::contains(Node* node, const Pacote& pacote) const {
+bool AVLPacotes::contains(Node* node, int idPacote) const {
     if (!node) return false;
-    if (pacote < node->pacote)
-        return contains(node->left, pacote);
-    else if (pacote > node->pacote)
-        return contains(node->right, pacote);
+    if (idPacote < node->pacote.id)
+        return contains(node->left, idPacote);
+    else if (idPacote > node->pacote.id)
+        return contains(node->right, idPacote);
     else
         return true;
 }
@@ -165,40 +189,16 @@ void AVLPacotes::clear(Node* node) {
 
 // Chamadas públicas
 void AVLPacotes::insereEvento(const Evento& evento, int index) {
-    Node* atual = root;
-
-    // Busca na árvore para ver se o pacote já existe
-    while (atual) {
-        if (evento.idPacote < atual->pacote.id) {
-            atual = atual->left;
-        } else if (evento.idPacote > atual->pacote.id) {
-            atual = atual->right;
-        } else {
-            // Pacote já existe na árvore
-            if (!atual->pacote.rota) {
-                atual->pacote.rota = new ListaEncadeada();
-            }
-            atual->pacote.rota->insereFinal(index);
-            return;
-        }
-    }
-
-    // Pacote ainda não existe na árvore: cria novo
-    Pacote novoPacote(evento.idPacote);
-    novoPacote.rota = new ListaEncadeada();
-    novoPacote.rota->insereFinal(index);
-
-    // Insere o novo pacote na AVL
-    root = insert(root, novoPacote);
+    // Só delega para insert, que resolve tudo
+    root = insert(root, evento.idPacote, index);
 }
-
 
 void AVLPacotes::remover(const Pacote& pacote) {
     root = remove(root, pacote);
 }
 
-bool AVLPacotes::contem(const Pacote& pacote) const {
-    return contains(root, pacote);
+bool AVLPacotes::contem(int idPacote) const {
+    return contains(root, idPacote);
 }
 
 bool AVLPacotes::estaVazia() const {
@@ -207,4 +207,62 @@ bool AVLPacotes::estaVazia() const {
 
 void AVLPacotes::imprimirEmOrdem() const {
     inOrder(root);
+}
+
+void AVLPacotes::imprimirPacote(No* primeiro) const {
+    for (No* atual = primeiro; atual != nullptr; atual = atual->prox) {
+        imprimeEvento(eventos[atual->item]);  // imprime o valor do nó atual
+    }
+}
+
+void AVLPacotes::imprimeEvento(const Evento& evento) const {
+    std::cout << std::setw(7) << std::setfill('0') << evento.tempo << " ";
+
+    if (evento.eventoOuConsulta == "CL") {
+        std::cout << "CL " << evento.tipoEvento;
+    } else if (evento.eventoOuConsulta == "PC") {
+        std::cout << "PC " << std::setw(3) << std::setfill('0') << evento.idPacote;
+    } else if (evento.eventoOuConsulta == "EV") {
+        std::cout << "EV " << evento.tipoEvento << " ";
+        
+        if (evento.tipoEvento == "RG") {
+            std::cout << std::setw(3) << std::setfill('0') << evento.idPacote << " "
+                      << evento.remetente << " " << evento.destinatario << " "
+                      << std::setw(3) << std::setfill('0') << evento.armOrigem << " "
+                      << std::setw(3) << std::setfill('0') << evento.armDestino;
+        } else if (evento.tipoEvento == "AR" || evento.tipoEvento == "RM" || evento.tipoEvento == "UR") {
+            std::cout << std::setw(3) << std::setfill('0') << evento.idPacote << " "
+                      << std::setw(3) << std::setfill('0') << evento.armDestino << " "
+                      << std::setw(3) << std::setfill('0') << evento.secaoDestino;
+        } else if (evento.tipoEvento == "TR") {
+            std::cout << std::setw(3) << std::setfill('0') << evento.idPacote << " "
+                      << std::setw(3) << std::setfill('0') << evento.armOrigem << " "
+                      << std::setw(3) << std::setfill('0') << evento.armDestino;
+        } else if (evento.tipoEvento == "EN") {
+            std::cout << std::setw(3) << std::setfill('0') << evento.armOrigem << " "
+                      << std::setw(3) << std::setfill('0') << evento.armDestino;
+        } else {
+            std::cout << "(Evento desconhecido)";
+        }
+    } else {
+        std::cout << "(Evento desconhecido)";
+    }
+
+    std::cout << std::endl;
+}
+
+
+void AVLPacotes::consultaPacote(int idPacote) const {
+    
+    Node* node = findNode(root, idPacote);
+    if (node) {
+        std::cout <<node->pacote.rota->getTamanho()<<std::endl;
+        if (node->pacote.rota) {
+            imprimirPacote(node->pacote.rota->primeiro);
+        } else {
+            std::cout << "(sem rota armazenada)";
+        }
+    } else {
+        std::cout << "Pacote com ID " << idPacote << " NÃO encontrado na árvore.\n";
+    }
 }

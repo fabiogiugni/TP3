@@ -3,8 +3,8 @@
 #include "cliente.hpp"
 #include "avlPacotes.hpp"
 #include <fstream>
+#include <iomanip>
 
-/*
 void imprimirEvento(const Evento& evento) {
     std::cout << "\n--- Registro ---\n";
     std::cout << "Tempo: " << evento.tempo << "\n";
@@ -29,7 +29,7 @@ void imprimirEvento(const Evento& evento) {
         }
         else if (evento.tipoEvento == "EN") {
             std::cout << "ID Pacote: " << evento.idPacote << "\n";
-            std::cout << "Seção Destino: " << evento.secaoDestino << "\n";
+            std::cout << "Armazém Destino: " << evento.armDestino << "\n";
         }
     }
     else if (evento.eventoOuConsulta == "CL") {
@@ -44,7 +44,7 @@ void imprimirEvento(const Evento& evento) {
         std::cout << "Tipo de registro desconhecido\n";
     }
     std::cout << "-----------------------\n";
-}*/
+}
 
 int main(int argc,char *argv[]){
 
@@ -73,7 +73,6 @@ int main(int argc,char *argv[]){
 
     Evento *eventos = nullptr;
     eventos = new Evento[numeroLinhas];
-    AVLPacotes pacotes(eventos,numeroLinhas);
 
     for(int i = 0; i < numeroLinhas; i++){
         int tempo = 0;
@@ -168,17 +167,24 @@ int main(int argc,char *argv[]){
         }
     }
 
+    AVLPacotes pacotes(eventos,numeroLinhas);
+    /*std::cout<<"vetor de eventos lido"<<std::endl;
+    for(int i = 0; i < numeroLinhas; i++){
+        imprimirEvento(pacotes.eventos[i]);
+    }*/
     arquivo.close();
     //Começa leitura
     for(int i = 0; i < numeroLinhas; i++){
         if(eventos[i].eventoOuConsulta == "CL"){
-            clientes.consultaCliente(eventos[i].tipoEvento);    //tipoEvento armazena nome do cliente
+            std::cout << std::setw(7) << std::setfill('0') << eventos[i].tempo << " "<< eventos[i].eventoOuConsulta << " "<< eventos[i].tipoEvento <<std::endl;
+            //clientes.consultaCliente(eventos[i].tipoEvento);    //tipoEvento armazena nome do cliente
         }else if(eventos[i].eventoOuConsulta == "PC"){
+            std::cout << std::setw(7) << std::setfill('0') << eventos[i].tempo <<" "<< eventos[i].eventoOuConsulta <<" "<< std::setw(3) << std::setfill('0') << eventos[i].idPacote<<std::endl;
             pacotes.consultaPacote(eventos[i].idPacote);    //tipoEvento armazena nome do cliente
         }
         else if(eventos[i].eventoOuConsulta == "EV"){
             pacotes.insereEvento(eventos[i],i);
-            clientes.insereEvento(eventos[i]);
+            //clientes.insereEvento(eventos[i]);
         }
     }
     return 0;

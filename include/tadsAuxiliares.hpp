@@ -25,6 +25,7 @@ struct No{
 class ListaEncadeada{
     public:
         ListaEncadeada();
+        ListaEncadeada(const ListaEncadeada& outra);
         ~ListaEncadeada();
     
         void insereInicio(int item);
@@ -32,6 +33,8 @@ class ListaEncadeada{
         void removeInicio();
         void removeFinal();
         void imprime();
+        ListaEncadeada& operator=(const ListaEncadeada& outra);
+        int getTamanho();
     
     private:
         No *primeiro;
@@ -39,6 +42,7 @@ class ListaEncadeada{
         int tamanho;
     friend class Cliente;
     friend class Pacote;
+    friend class AVLPacotes;
 };
 
 #endif

@@ -7,6 +7,12 @@ ListaEncadeada::ListaEncadeada(){
     ultimo = nullptr;
 }
 
+ListaEncadeada::ListaEncadeada(const ListaEncadeada& outra) : primeiro(nullptr), ultimo(nullptr), tamanho(0) {
+    for (No* atual = outra.primeiro; atual != nullptr; atual = atual->prox) {
+        this->insereFinal(atual->item);
+    }
+}
+
 ListaEncadeada::~ListaEncadeada() {
     while (primeiro != nullptr) {
         No* temp = primeiro;
@@ -24,6 +30,27 @@ void ListaEncadeada::insereInicio(int item){
     }
     ++tamanho;
 }
+
+ListaEncadeada& ListaEncadeada::operator=(const ListaEncadeada& outra) {
+    if (this == &outra) return *this;
+
+    // Limpa a lista atual
+    while (primeiro != nullptr) {
+        No* temp = primeiro;
+        primeiro = primeiro->prox;
+        delete temp;
+    }
+    primeiro = ultimo = nullptr;
+    tamanho = 0;
+
+    // Copia os elementos da outra lista
+    for (No* atual = outra.primeiro; atual != nullptr; atual = atual->prox) {
+        this->insereFinal(atual->item);
+    }
+
+    return *this;
+}
+
 
 void ListaEncadeada::insereFinal(int item){
     No *nova = new No{item, nullptr};
@@ -78,4 +105,8 @@ void ListaEncadeada::removeFinal() {
         ultimo->prox = nullptr;  // O próximo do último nó deve ser nulo
     }
     --tamanho;  // Decrementa o tamanho da lista
+}
+
+int ListaEncadeada::getTamanho(){
+    return tamanho;
 }
