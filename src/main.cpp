@@ -2,10 +2,11 @@
 #include "pacote.hpp"
 #include "cliente.hpp"
 #include "avlPacotes.hpp"
+#include "avlClientes.hpp"
 #include <fstream>
 #include <iomanip>
 
-void imprimirEvento(const Evento& evento) {
+/*void imprimirEvento(const Evento& evento) {
     std::cout << "\n--- Registro ---\n";
     std::cout << "Tempo: " << evento.tempo << "\n";
     
@@ -44,7 +45,7 @@ void imprimirEvento(const Evento& evento) {
         std::cout << "Tipo de registro desconhecido\n";
     }
     std::cout << "-----------------------\n";
-}
+}*/
 
 int main(int argc,char *argv[]){
 
@@ -166,25 +167,56 @@ int main(int argc,char *argv[]){
             }
         }
     }
-
     AVLPacotes pacotes(eventos,numeroLinhas);
+    AVLClientes clientes;
     /*std::cout<<"vetor de eventos lido"<<std::endl;
     for(int i = 0; i < numeroLinhas; i++){
-        imprimirEvento(pacotes.eventos[i]);
+        imprimirEvento(eventos[i]);
     }*/
     arquivo.close();
     //Começa leitura
     for(int i = 0; i < numeroLinhas; i++){
         if(eventos[i].eventoOuConsulta == "CL"){
-            std::cout << std::setw(7) << std::setfill('0') << eventos[i].tempo << " "<< eventos[i].eventoOuConsulta << " "<< eventos[i].tipoEvento <<std::endl;
-            //clientes.consultaCliente(eventos[i].tipoEvento);    //tipoEvento armazena nome do cliente
+            std::cout << std::setw(6) << std::setfill('0') << eventos[i].tempo << " "<< eventos[i].eventoOuConsulta << " "<< eventos[i].tipoEvento <<std::endl;
+            Cliente* cliente;
+            cliente = clientes.consultaCliente(eventos[i].tipoEvento);
+            if(cliente == nullptr){
+                std::cout<<0<<std::endl;
+                continue;
+            }
+            std::cout<< 2 * cliente->pacotes->getTamanho()<<std::endl;
+            for(No* aux = cliente->pacotes->getPrimeiro(); aux != nullptr; aux = aux->prox){
+                pacotes.imprimirPrimeiro(aux->item);
+            }
+            Evento* temp = new Evento[cliente->pacotes->getTamanho()];
+            int k=0;
+            for(No* aux = cliente->pacotes->getPrimeiro(); aux != nullptr; aux = aux->prox){
+                temp[k] = pacotes.acessaUltimo(aux->item);
+                k++;
+            }
+            int n = cliente->pacotes->getTamanho();
+            for (int i = 0; i < n - 1; ++i) {
+                for (int j = 0; j < n - i - 1; ++j) {
+                    if (temp[j].tempo > temp[j + 1].tempo || (temp[j].tempo == temp[j+1].tempo && temp[j].idPacote > temp[j+1].idPacote)) {
+                        Evento aux = temp[j];
+                        temp[j] = temp[j + 1];
+                        temp[j + 1] = aux;
+                    }
+                }
+            }
+            for(int i = 0; i<n; i++){
+                pacotes.imprimeEvento(temp[i]);
+            }
+            delete[] temp;
         }else if(eventos[i].eventoOuConsulta == "PC"){
-            std::cout << std::setw(7) << std::setfill('0') << eventos[i].tempo <<" "<< eventos[i].eventoOuConsulta <<" "<< std::setw(3) << std::setfill('0') << eventos[i].idPacote<<std::endl;
+            std::cout << std::setw(6) << std::setfill('0') << eventos[i].tempo <<" "<< eventos[i].eventoOuConsulta <<" "<< std::setw(3) << std::setfill('0') << eventos[i].idPacote<<std::endl;
             pacotes.consultaPacote(eventos[i].idPacote);    //tipoEvento armazena nome do cliente
         }
         else if(eventos[i].eventoOuConsulta == "EV"){
-            pacotes.insereEvento(eventos[i],i);
-            //clientes.insereEvento(eventos[i]);
+            pacotes.insereEvento(eventos[i],i); //pra cada evento atualiza o pacote
+            if(eventos[i].tipoEvento == "RG"){
+                clientes.inserePacote(eventos[i]);  //se o evento for RG, tem q registrar ele na arvore de clientes
+            }
         }
     }
     return 0;

@@ -215,6 +215,22 @@ void AVLPacotes::imprimirPacote(No* primeiro) const {
     }
 }
 
+void AVLPacotes::imprimirPrimeiro(int idPacote) const{
+    Node* aux = findNode(root, idPacote);
+    imprimeEvento(eventos[aux->pacote.rota->primeiro->item]);
+}
+
+void AVLPacotes::imprimirUltimo(int idPacote) const{
+    Node* aux = findNode(root, idPacote);
+    imprimeEvento(eventos[aux->pacote.rota->ultimo->item]);
+}
+
+
+Evento AVLPacotes::acessaUltimo(int idPacote) const{
+    Node* aux = findNode(root, idPacote);
+    return (eventos[aux->pacote.rota->ultimo->item]);
+}
+
 void AVLPacotes::imprimeEvento(const Evento& evento) const {
     std::cout << std::setw(7) << std::setfill('0') << evento.tempo << " ";
 
@@ -239,7 +255,7 @@ void AVLPacotes::imprimeEvento(const Evento& evento) const {
                       << std::setw(3) << std::setfill('0') << evento.armOrigem << " "
                       << std::setw(3) << std::setfill('0') << evento.armDestino;
         } else if (evento.tipoEvento == "EN") {
-            std::cout << std::setw(3) << std::setfill('0') << evento.armOrigem << " "
+            std::cout << std::setw(3) << std::setfill('0') << evento.idPacote << " "
                       << std::setw(3) << std::setfill('0') << evento.armDestino;
         } else {
             std::cout << "(Evento desconhecido)";

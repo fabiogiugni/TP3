@@ -49,6 +49,9 @@ private:
     void imprimirEmOrdem() const;
     void imprimirPacote(No* primeiro) const;
     void imprimeEvento(const Evento& evento)const;
+    void imprimirPrimeiro(int idPacote)const;
+    void imprimirUltimo(int idPacote)const;
+    Evento acessaUltimo(int idPacote)const;
 };
 
 #endif

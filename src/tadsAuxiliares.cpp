@@ -110,3 +110,11 @@ void ListaEncadeada::removeFinal() {
 int ListaEncadeada::getTamanho(){
     return tamanho;
 }
+
+No* ListaEncadeada::getPrimeiro(){
+    return primeiro;
+}
+
+No* ListaEncadeada::getUltimo(){
+    return ultimo;
+}

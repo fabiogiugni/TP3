@@ -35,6 +35,8 @@ class ListaEncadeada{
         void imprime();
         ListaEncadeada& operator=(const ListaEncadeada& outra);
         int getTamanho();
+        No* getPrimeiro();
+        No* getUltimo();
     
     private:
         No *primeiro;
@@ -43,6 +45,7 @@ class ListaEncadeada{
     friend class Cliente;
     friend class Pacote;
     friend class AVLPacotes;
+    friend class AVLClientes;
 };
 
 #endif

@@ -34,8 +34,6 @@ struct Pacote {
     bool operator<=(const Pacote& outro) const { return !(*this > outro); }
     bool operator>=(const Pacote& outro) const { return !(*this < outro); }
     
-    // Como é struct, todos membros são públicos por padrão
-    // Mas podemos declarar friendship se necessário
     friend class Cliente;
 };
 
