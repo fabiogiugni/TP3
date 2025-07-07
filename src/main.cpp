@@ -5,47 +5,8 @@
 #include "avlClientes.hpp"
 #include <fstream>
 #include <iomanip>
+#include <chrono>
 
-/*void imprimirEvento(const Evento& evento) {
-    std::cout << "\n--- Registro ---\n";
-    std::cout << "Tempo: " << evento.tempo << "\n";
-    
-    if (evento.eventoOuConsulta == "EV") {
-        std::cout << "Tipo: Evento " << evento.tipoEvento << "\n";
-        
-        if (evento.tipoEvento == "RG" || evento.tipoEvento == "RM") {
-            std::cout << "ID Pacote: " << evento.idPacote << "\n";
-            std::cout << "Remetente: " << evento.remetente << "\n";
-            std::cout << "Destinatário: " << evento.destinatario << "\n";
-            std::cout << "Armazém Origem: " << evento.armOrigem << "\n";
-            std::cout << "Armazém Destino: " << evento.armDestino << "\n";
-        }
-        else if (evento.tipoEvento == "AR" || evento.tipoEvento == "TR" || evento.tipoEvento == "UR") {
-            std::cout << "ID Pacote: " << evento.idPacote << "\n";
-            std::cout << "Armazém Origem: " << evento.armOrigem << "\n";
-            std::cout << "Armazém Destino: " << evento.armDestino << "\n";
-            if (evento.tipoEvento != "TR") {
-                std::cout << "Seção Destino: " << evento.secaoDestino << "\n";
-            }
-        }
-        else if (evento.tipoEvento == "EN") {
-            std::cout << "ID Pacote: " << evento.idPacote << "\n";
-            std::cout << "Armazém Destino: " << evento.armDestino << "\n";
-        }
-    }
-    else if (evento.eventoOuConsulta == "CL") {
-        std::cout << "Tipo: Consulta de Cliente\n";
-        std::cout << "Nome: " << evento.tipoEvento << "\n";  // tipoEvento armazena o nome aqui
-    }
-    else if (evento.eventoOuConsulta == "PC") {
-        std::cout << "Tipo: Consulta de Pacote\n";
-        std::cout << "ID Pacote: " << evento.idPacote << "\n";
-    }
-    else {
-        std::cout << "Tipo de registro desconhecido\n";
-    }
-    std::cout << "-----------------------\n";
-}*/
 
 int main(int argc,char *argv[]){
 
@@ -169,12 +130,9 @@ int main(int argc,char *argv[]){
     }
     AVLPacotes pacotes(eventos,numeroLinhas);
     AVLClientes clientes;
-    /*std::cout<<"vetor de eventos lido"<<std::endl;
-    for(int i = 0; i < numeroLinhas; i++){
-        imprimirEvento(eventos[i]);
-    }*/
     arquivo.close();
     //Começa leitura
+    auto start = std::chrono::high_resolution_clock::now();
     for(int i = 0; i < numeroLinhas; i++){
         if(eventos[i].eventoOuConsulta == "CL"){
             std::cout << std::setw(6) << std::setfill('0') << eventos[i].tempo << " "<< eventos[i].eventoOuConsulta << " "<< eventos[i].tipoEvento <<std::endl;
@@ -219,5 +177,8 @@ int main(int argc,char *argv[]){
             }
         }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "\nT = " << elapsed.count() << " segundos\n";
     return 0;
 }
